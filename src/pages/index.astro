@@ -1,8 +1,21 @@
 ---
-import Welcome from "../components/Welcome.astro";
-import Layout from "../layouts/Layout.astro";
+import Layout from '@/layouts/Layout.astro';
+import DashboardApp from '@/components/dashboard/DashboardApp';
+import { normalizeMonthParam } from '@/lib/month';
+
+const { locals, url } = Astro;
+const supabase = locals.supabase;
+
+const { data, error } = await supabase.auth.getUser();
+const user = data?.user;
+
+if (error || !user) {
+    return Astro.redirect('/auth/login');
+}
+
+const normalizedMonth = normalizeMonthParam(url.searchParams.get('month') ?? undefined);
 ---
 
 <Layout>
-  <Welcome />
+    <DashboardApp client:load initialMonth={normalizedMonth.value} />
 </Layout>

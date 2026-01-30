@@ -1,0 +1,65 @@
+---
+import { GoogleOAuthButtons } from '@/components/auth/GoogleOAuthButtons';
+import AuthLayout from '../../layouts/AuthLayout.astro';
+
+const { url } = Astro;
+
+const authErrorParam = url.searchParams.get('authError');
+const authErrorDictionary: Record<string, string> = {
+    expired: 'Sesja wygasła. Zaloguj się ponownie.',
+    missing: 'Brak aktywnej sesji. Prosimy o ponowne logowanie.',
+    denied: 'Dostęp został odrzucony. Sprawdź uprawnienia konta.',
+};
+const authError = authErrorParam
+    ? (authErrorDictionary[authErrorParam] ?? 'Nie udało się zalogować. Spróbuj ponownie.')
+    : null;
+---
+
+<AuthLayout title="Zaloguj się do Home Budget" description="Dostęp do panelu zarządzania finansami">
+    <section class="grid gap-12 lg:grid-cols-2" aria-labelledby="login-title">
+        <div class="space-y-6">
+            <p class="text-sm font-semibold uppercase tracking-[0.2em] text-muted-foreground">Panel finansów</p>
+            <div class="space-y-4">
+                <h1 id="login-title" class="text-4xl font-semibold leading-tight tracking-tight sm:text-5xl">
+                    Odzyskaj kontrolę nad budżetem w kilka minut
+                </h1>
+                <p class="text-lg text-muted-foreground">
+                    Wszystkie wydatki, wpływy i prognozy w jednym miejscu. Bezpieczeństwo zapewnia Supabase Auth, a my
+                    pilnujemy Twoich danych.
+                </p>
+            </div>
+            <ul class="grid gap-4 text-sm text-muted-foreground">
+                <li class="flex items-start gap-3">
+                    <span class="mt-1 size-2 rounded-full bg-primary" aria-hidden></span>
+                    Powiadomienia o zbliżających się płatnościach i przekroczeniach budżetu.
+                </li>
+                <li class="flex items-start gap-3">
+                    <span class="mt-1 size-2 rounded-full bg-primary" aria-hidden></span>
+                    Eksport danych i współdzielenie dostępu z partnerem.
+                </li>
+            </ul>
+        </div>
+
+        <article class="rounded-2xl border border-border bg-card/80 p-8 shadow-lg" aria-describedby="login-description">
+            <div class="space-y-2 text-center">
+                <h2 class="text-2xl font-semibold tracking-tight">Wejdź do swojego konta</h2>
+            </div>
+
+            {
+                authError ? (
+                    <p
+                        class="mt-6 flex items-center gap-2 rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive"
+                        role="alert"
+                    >
+                        <span aria-hidden>!</span>
+                        <span>{authError}</span>
+                    </p>
+                ) : null
+            }
+
+            <div class="mt-6">
+                <GoogleOAuthButtons client:idle helperText="Przekierujemy Cię do Google, a potem wrócisz do panelu." />
+            </div>
+        </article>
+    </section>
+</AuthLayout>

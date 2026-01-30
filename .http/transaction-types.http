@@ -1,0 +1,249 @@
+###############################################################################
+# Transaction Types API - Test Requests
+# Base URL: http://localhost:3999 (Astro default dev server)
+#
+# Note: Authentication is currently disabled in the API
+###############################################################################
+
+@baseUrl = http://localhost:3000
+
+###############################################################################
+# 1. Basic Request - Get all transaction types
+###############################################################################
+
+GET {{baseUrl}}/api/transaction-types
+
+### Using curl
+# curl -X GET "http://localhost:3000/api/transaction-types"
+
+###############################################################################
+# 2. Search by name or code
+###############################################################################
+
+GET {{baseUrl}}/api/transaction-types?q=income
+
+### Using curl
+# curl -X GET "http://localhost:3000/api/transaction-types?q=income"
+
+###############################################################################
+# 3. Search with multiple characters
+###############################################################################
+
+GET {{baseUrl}}/api/transaction-types?q=exp
+
+### Using curl
+# curl -X GET "http://localhost:3000/api/transaction-types?q=exp"
+
+###############################################################################
+# 4. Sort by position ascending (default)
+###############################################################################
+
+GET {{baseUrl}}/api/transaction-types?order=position.asc
+
+### Using curl
+# curl -X GET "http://localhost:3000/api/transaction-types?order=position.asc"
+
+###############################################################################
+# 5. Sort by position descending
+###############################################################################
+
+GET {{baseUrl}}/api/transaction-types?order=position.desc
+
+### Using curl
+# curl -X GET "http://localhost:3000/api/transaction-types?order=position.desc"
+
+###############################################################################
+# 6. Combined filters - search and sort
+###############################################################################
+
+GET {{baseUrl}}/api/transaction-types?q=income&order=position.desc
+
+### Using curl
+# curl -X GET "http://localhost:3000/api/transaction-types?q=income&order=position.desc"
+
+###############################################################################
+# 7. Empty search query (should return all)
+###############################################################################
+
+GET {{baseUrl}}/api/transaction-types?q=
+
+### Using curl
+# curl -X GET "http://localhost:3000/api/transaction-types?q="
+
+###############################################################################
+# 8. Invalid sort order (should return validation error)
+###############################################################################
+
+GET {{baseUrl}}/api/transaction-types?order=name.asc
+
+### Using curl
+# curl -X GET "http://localhost:3000/api/transaction-types?order=name.asc"
+
+###############################################################################
+# 9. Search for non-existent term (should return empty results)
+###############################################################################
+
+GET {{baseUrl}}/api/transaction-types?q=nonexistentterm12345
+
+### Using curl
+# curl -X GET "http://localhost:3000/api/transaction-types?q=nonexistentterm12345"
+
+###############################################################################
+# GET BY ID ENDPOINTS
+###############################################################################
+
+###############################################################################
+# 10. Get transaction type by valid ID
+###############################################################################
+
+GET {{baseUrl}}/api/transaction-types/1
+
+### Using curl
+# curl -X GET "http://localhost:3000/api/transaction-types/1"
+
+###############################################################################
+# 11. Get transaction type by another valid ID
+###############################################################################
+
+GET {{baseUrl}}/api/transaction-types/2
+
+### Using curl
+# curl -X GET "http://localhost:3000/api/transaction-types/2"
+
+###############################################################################
+# 12. Get transaction type with non-existent ID (should return 404)
+###############################################################################
+
+GET {{baseUrl}}/api/transaction-types/9999
+
+### Using curl
+# curl -X GET "http://localhost:3000/api/transaction-types/9999"
+
+###############################################################################
+# 13. Invalid ID - negative number (should return 400 validation error)
+###############################################################################
+
+GET {{baseUrl}}/api/transaction-types/-1
+
+### Using curl
+# curl -X GET "http://localhost:3000/api/transaction-types/-1"
+
+###############################################################################
+# 14. Invalid ID - zero (should return 400 validation error)
+###############################################################################
+
+GET {{baseUrl}}/api/transaction-types/0
+
+### Using curl
+# curl -X GET "http://localhost:3000/api/transaction-types/0"
+
+###############################################################################
+# 15. Invalid ID - non-numeric string (should return 400 validation error)
+###############################################################################
+
+GET {{baseUrl}}/api/transaction-types/abc
+
+### Using curl
+# curl -X GET "http://localhost:3000/api/transaction-types/abc"
+
+###############################################################################
+# 16. Invalid ID - decimal number (should return 400 validation error)
+###############################################################################
+
+GET {{baseUrl}}/api/transaction-types/1.5
+
+### Using curl
+# curl -X GET "http://localhost:3000/api/transaction-types/1.5"
+
+###############################################################################
+# Expected Response Format:
+###############################################################################
+
+# LIST ENDPOINT (/api/transaction-types)
+# ----------------------------------------
+
+# Success Response (200):
+# {
+#   "data": [
+#     {
+#       "id": 1,
+#       "code": "INCOME",
+#       "name": "Income",
+#       "position": 1
+#     }
+#   ],
+#   "count": 1
+# }
+
+# Validation Error (400):
+# {
+#   "error": {
+#     "code": "VALIDATION_ERROR",
+#     "message": "Invalid query parameters",
+#     "details": {
+#       "order": ["Invalid enum value. Expected 'position.asc' | 'position.desc'"]
+#     }
+#   }
+# }
+
+# Internal Error (500):
+# {
+#   "error": {
+#     "code": "INTERNAL_ERROR",
+#     "message": "An unexpected error occurred"
+#   }
+# }
+
+# GET BY ID ENDPOINT (/api/transaction-types/:id)
+# ------------------------------------------------
+
+# Success Response (200):
+# {
+#   "id": 1,
+#   "code": "INCOME",
+#   "name": "Income",
+#   "position": 1
+# }
+
+# Validation Error (400):
+# {
+#   "error": {
+#     "code": "VALIDATION_ERROR",
+#     "message": "Invalid transaction type ID",
+#     "details": {
+#       "id": ["ID must be a positive integer"]
+#     }
+#   }
+# }
+
+# Not Found Error (404):
+# {
+#   "error": {
+#     "code": "NOT_FOUND",
+#     "message": "Transaction type not found"
+#   }
+# }
+
+# Internal Error (500):
+# {
+#   "error": {
+#     "code": "INTERNAL_ERROR",
+#     "message": "An unexpected error occurred"
+#   }
+# }
+
+###############################################################################
+# How to use this file:
+###############################################################################
+
+# Option 1: VS Code with REST Client extension
+# - Install "REST Client" extension by Huachao Mao
+# - Click "Send Request" above each request
+
+# Option 2: Copy curl commands
+# - Uncomment the curl commands (remove leading #)
+# - Run in terminal
+
+# Option 3: IntelliJ IDEA / WebStorm
+# - Built-in HTTP Client supports .http files
+# - Use the play button next to each request

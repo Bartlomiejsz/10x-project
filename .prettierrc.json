@@ -1,16 +1,28 @@
 {
-  "semi": true,
-  "singleQuote": false,
-  "tabWidth": 2,
-  "printWidth": 120,
-  "trailingComma": "es5",
-  "plugins": ["prettier-plugin-astro"],
-  "overrides": [
-    {
-      "files": "*.astro",
-      "options": {
-        "parser": "astro"
-      }
-    }
-  ]
+    "semi": true,
+    "singleQuote": true,
+    "tabWidth": 4,
+    "printWidth": 120,
+    "trailingComma": "es5",
+    "plugins": [
+        "prettier-plugin-astro",
+        "@trivago/prettier-plugin-sort-imports"
+    ],
+    "overrides": [
+        {
+            "files": "*.astro",
+            "options": {
+                "parser": "astro"
+            }
+        }
+    ],
+    "importOrder": [
+        "^(react)$",
+        "<THIRD_PARTY_MODULES>",
+        "^@/components",
+        "^@/",
+        "\\.css"
+    ],
+    "importOrderSeparation": true,
+    "importOrderSortSpecifiers": true
 }
