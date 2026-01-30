@@ -40,6 +40,7 @@ export const GET: APIRoute = async ({ params, locals }) => {
         }
 
         if (error instanceof ValidationError) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             return jsonError(400, 'VALIDATION_ERROR', error.message, (error.details ?? undefined) as any);
         }
 
@@ -92,6 +93,7 @@ export const PUT: APIRoute = async ({ params, request, locals }) => {
         }
 
         if (error instanceof ValidationError) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             return jsonError(400, 'VALIDATION_ERROR', error.message, (error.details ?? undefined) as any);
         }
 
@@ -135,6 +137,7 @@ export const DELETE: APIRoute = async ({ params, locals }) => {
         }
 
         if (error instanceof ValidationError) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             return jsonError(400, 'VALIDATION_ERROR', error.message, (error.details ?? undefined) as any);
         }
 

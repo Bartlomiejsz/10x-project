@@ -120,6 +120,7 @@ export const useInfiniteTransactions = ({
                 setCount(response.count ?? undefined);
             } catch (err) {
                 if (cancelled) return;
+                // eslint-disable-next-line no-console
                 console.error(err);
                 setError(err instanceof Error ? err : new Error('Unknown error'));
             } finally {
@@ -133,6 +134,7 @@ export const useInfiniteTransactions = ({
             cancelled = true;
             controller.abort();
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [month.value, baseQueryKey, pageSize, refetchToken]);
 
     const loadMore = useCallback(() => {
@@ -162,6 +164,7 @@ export const useInfiniteTransactions = ({
                 setCount(response.count ?? undefined);
             })
             .catch((err) => {
+                // eslint-disable-next-line no-console
                 console.error(err);
                 setError(err instanceof Error ? err : new Error('Unknown error'));
             })

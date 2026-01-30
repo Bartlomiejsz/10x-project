@@ -40,6 +40,7 @@ export const GET: APIRoute = async ({ request, locals }) => {
         }
 
         if (error instanceof ValidationError) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             return jsonError(400, 'VALIDATION_ERROR', error.message, (error.details ?? undefined) as any);
         }
 
@@ -77,6 +78,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
         }
 
         if (error instanceof ValidationError) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             return jsonError(400, 'VALIDATION_ERROR', error.message, (error.details ?? undefined) as any);
         }
 
