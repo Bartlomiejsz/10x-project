@@ -134,6 +134,7 @@ export const useInfiniteTransactions = ({
             cancelled = true;
             controller.abort();
         };
+        // eslint-disable-next-line react-compiler/react-compiler
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [month.value, baseQueryKey, pageSize, refetchToken]);
 
