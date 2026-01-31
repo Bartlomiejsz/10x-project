@@ -11,10 +11,9 @@
         "lint": "eslint .",
         "lint:fix": "eslint . --fix",
         "format": "prettier --write .",
-        "test": "vitest",
+        "test:e2e": "vitest playwright test",
         "test:run": "vitest run",
-        "test:coverage": "vitest run --coverage",
-        "test:min": "tsx scripts/minitest.ts"
+        "test:coverage": "vitest run --coverage"
     },
     "dependencies": {
         "@astrojs/cloudflare": "^12.6.12",
