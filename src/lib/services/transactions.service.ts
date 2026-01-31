@@ -58,15 +58,14 @@ function encodeCursor(row: Pick<TransactionDTO, 'date' | 'id'>): string {
 export class TransactionsService {
     async listTransactions(
         filters: TransactionFilters,
-        supabase: SupabaseClient,
-        userId: string
+        supabase: SupabaseClient
     ): Promise<PaginatedResponse<TransactionDTO>> {
         const limit = Math.min(filters.limit ?? DEFAULT_LIMIT, 1000);
 
         // projection
         const select = parseFields(filters.fields) ?? '*';
 
-        let query = supabase.from('transactions').select(select, { count: 'exact' }).eq('user_id', userId);
+        let query = supabase.from('transactions').select(select, { count: 'exact' });
 
         // filters
         if (filters.start_date) query = query.gte('date', filters.start_date);
@@ -142,13 +141,8 @@ export class TransactionsService {
         };
     }
 
-    async getTransactionById(id: string, supabase: SupabaseClient, userId: string): Promise<TransactionDTO> {
-        const { data, error } = await supabase
-            .from('transactions')
-            .select('*')
-            .eq('id', id)
-            .eq('user_id', userId)
-            .single();
+    async getTransactionById(id: string, supabase: SupabaseClient): Promise<TransactionDTO> {
+        const { data, error } = await supabase.from('transactions').select('*').eq('id', id).single();
 
         if (error && error.code === 'PGRST116') {
             throw new NotFoundError('Transaction not found');
@@ -185,7 +179,6 @@ export class TransactionsService {
             const { data: existing, error: existingError } = await supabase
                 .from('transactions')
                 .select('id')
-                .eq('user_id', userId)
                 .eq('import_hash', importHash)
                 .maybeSingle();
 

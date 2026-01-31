@@ -6,10 +6,12 @@ import { normalizeMonthParam } from '@/lib/month';
 const { locals, url } = Astro;
 const supabase = locals.supabase;
 
+const skipAuth = import.meta.env.SKIP_AUTH || false;
+
 const { data, error } = await supabase.auth.getUser();
 const user = data?.user;
 
-if (error || !user) {
+if ((error || !user) && !skipAuth) {
     return Astro.redirect('/auth/login');
 }
 

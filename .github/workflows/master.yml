@@ -44,15 +44,11 @@ jobs:
       - name: Setup Node.js
         uses: ./.github/actions/setup-node
 
-      # TODO: Uncomment when Playwright is configured
-      # - name: Install Playwright browsers
-      #   run: npx playwright install --with-deps chromium
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
 
-      # - name: Run E2E tests
-      #   run: npm run test:e2e
-
-      - name: E2E tests placeholder
-        run: echo "E2E tests will be implemented with Playwright"
+      - name: Run E2E tests
+        run: npm run test:e2e
 
   build:
     name: Build

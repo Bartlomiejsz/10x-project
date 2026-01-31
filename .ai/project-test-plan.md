@@ -56,7 +56,6 @@ Niniejszy dokument przedstawia plan testów dla aplikacji HomeBudget - systemu z
 **Cel:** Weryfikacja pełnych ścieżek użytkownika
 
 **Zakres:**
-- Logowanie przez Google OAuth
 - CRUD transakcji przez interfejs użytkownika
 - Edycja budżetów inline
 - Nawigacja między miesiącami
@@ -148,29 +147,7 @@ Niniejszy dokument przedstawia plan testów dla aplikacji HomeBudget - systemu z
 | 1 | Utworzenie transakcji przez różnych użytkowników | - |
 | 2 | GET `/api/reports/monthly` | shares zawiera podział per user_id |
 
-### 4.4 Moduł Autoryzacji
-
-#### TC-AU-001: Wymaganie autoryzacji
-| Krok | Akcja | Oczekiwany rezultat |
-|------|-------|---------------------|
-| 1 | GET `/api/transactions` bez tokenu | Status 401 UnauthorizedError |
-| 2 | GET `/api/transactions` z prawidłowym tokenem | Status 200 |
-
-#### TC-AU-002: Google OAuth flow
-| Krok | Akcja | Oczekiwany rezultat |
-|------|-------|---------------------|
-| 1 | GET `/auth/oauth/google` | Redirect do Supabase OAuth |
-| 2 | Callback po autoryzacji | Sesja utworzona, redirect do `/` |
-| 3 | Błąd autoryzacji | Redirect do `/auth/login?authError=reason` |
-
-#### TC-AU-003: Row Level Security
-| Krok | Akcja | Oczekiwany rezultat |
-|------|-------|---------------------|
-| 1 | Użytkownik A tworzy transakcję | Transakcja z user_id = A |
-| 2 | Użytkownik B próbuje usunąć transakcję A | Dozwolone (shared household) |
-| 3 | Niezautentykowany użytkownik | Brak dostępu do żadnych danych |
-
-### 4.5 Interfejs użytkownika (UI)
+### 4.4 Interfejs użytkownika (UI)
 
 #### TC-UI-001: Dashboard - ładowanie danych
 | Krok | Akcja | Oczekiwany rezultat |

@@ -34,29 +34,34 @@ export const MonthSelector = ({ value, options, onChange, className }: MonthSele
     }, [canGoNext, currentIndex, options, onChange]);
 
     return (
-        <div className={cn('flex items-center gap-2', className)}>
+        <div className={cn('flex items-center gap-2', className)} data-testid="month-selector">
             <Button
                 variant="outline"
                 size="icon"
                 onClick={handlePrev}
                 disabled={!canGoPrev}
                 aria-label="Poprzedni miesiąc"
+                data-testid="month-selector-prev"
             >
                 <ChevronLeft className="h-4 w-4" />
             </Button>
 
             <Select value={value} onValueChange={onChange}>
-                <SelectTrigger className="min-w-[200px] flex-1">
+                <SelectTrigger className="min-w-[200px] flex-1" data-testid="month-selector-trigger">
                     <div className="flex items-center gap-2">
                         {currentOption?.isReadonly && (
-                            <Lock className="h-4 w-4 flex-shrink-0 text-amber-600" aria-hidden="true" />
+                            <Lock
+                                className="h-4 w-4 flex-shrink-0 text-amber-600"
+                                aria-hidden="true"
+                                data-testid="month-selector-lock-icon"
+                            />
                         )}
                         <SelectValue aria-current={currentOption?.value === value ? 'date' : undefined} />
                     </div>
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent data-testid="month-selector-content">
                     {options.map((opt) => (
-                        <SelectItem key={opt.value} value={opt.value}>
+                        <SelectItem key={opt.value} value={opt.value} data-testid={`month-option-${opt.value}`}>
                             <div className="flex items-center gap-2">
                                 <span>{opt.label}</span>
                                 {opt.isReadonly && <span className="text-xs text-slate-500">(tylko podgląd)</span>}
@@ -72,6 +77,7 @@ export const MonthSelector = ({ value, options, onChange, className }: MonthSele
                 onClick={handleNext}
                 disabled={!canGoNext}
                 aria-label="Następny miesiąc"
+                data-testid="month-selector-next"
             >
                 <ChevronRight className="h-4 w-4" />
             </Button>
