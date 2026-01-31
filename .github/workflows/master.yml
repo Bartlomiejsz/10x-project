@@ -30,12 +30,8 @@ jobs:
       - name: Setup Node.js
         uses: ./.github/actions/setup-node
 
-      # TODO: Uncomment when Vitest is configured
-      # - name: Run unit tests
-      #   run: npm run test:unit
-
-      - name: Unit tests placeholder
-        run: echo "Unit tests will be implemented with Vitest"
+      - name: Run unit tests
+        run: npm run test:run
 
   e2e-tests:
     name: E2E Tests
@@ -87,6 +83,7 @@ jobs:
     name: Deploy to Cloudflare Pages
     runs-on: ubuntu-latest
     needs: build
+    if: github.event_name == 'workflow_dispatch'
     environment: production
     steps:
       - name: Download build artifacts
