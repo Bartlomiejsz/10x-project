@@ -51,8 +51,6 @@ const applyTransactionFilters = (params: URLSearchParams, filters?: TransactionF
     setIfPresent('limit', filters.limit);
     setIfPresent('cursor', filters.cursor);
     setIfPresent('order', filters.order);
-    setIfPresent('start_date', filters.start_date);
-    setIfPresent('end_date', filters.end_date);
     setIfPresent('type_id', filters.type_id);
     setIfPresent('min_amount', filters.min_amount);
     setIfPresent('max_amount', filters.max_amount);

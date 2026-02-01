@@ -61,7 +61,8 @@ export const TransactionItem = ({ item, readonly, onEdit, onDelete }: Transactio
             <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-center gap-2">
                     <p className="truncate text-sm font-semibold text-slate-900">{item.type.name}</p>
-                    <ConfidenceBadge value={item.ai} />
+                    {/*TODO: enable when AI confidence is available*/}
+                    {/*<ConfidenceBadge value={item.ai} />*/}
                     {item.isManual && (
                         <span className="rounded-full border border-slate-200 bg-slate-50 px-2 py-1 text-xs text-slate-700">
                             Ręcznie

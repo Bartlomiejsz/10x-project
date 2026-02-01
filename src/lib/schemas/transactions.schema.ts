@@ -20,6 +20,7 @@ export const TRANSACTION_SELECTABLE_FIELDS = [
 export type TransactionSelectableField = (typeof TRANSACTION_SELECTABLE_FIELDS)[number];
 
 const ISO_DATE_REGEX = /^\d{4}-\d{2}-\d{2}$/;
+const MONTH_REGEX = /^\d{4}-\d{2}$/;
 
 const IsoDateSchema = z
     .string()
@@ -30,6 +31,24 @@ const IsoDateSchema = z
         if (Number.isNaN(date.getTime())) return false;
         return date.toISOString().slice(0, 10) === value;
     }, 'Invalid date');
+
+const MonthSchema = z
+    .string()
+    .regex(MONTH_REGEX, 'Invalid month format, expected YYYY-MM')
+    .refine((value) => {
+        const [year, month] = value.split('-').map(Number);
+        return year >= 2000 && year <= 2100 && month >= 1 && month <= 12;
+    }, 'Invalid month');
+
+function getMonthDateRange(month: string): { start_date: string; end_date: string } {
+    const [year, monthNum] = month.split('-').map(Number);
+    const start = new Date(Date.UTC(year, monthNum - 1, 1));
+    const end = new Date(Date.UTC(year, monthNum, 0)); // Last day of month
+    return {
+        start_date: start.toISOString().slice(0, 10),
+        end_date: end.toISOString().slice(0, 10),
+    };
+}
 
 const coerceOptionalInt = () =>
     z
@@ -72,8 +91,7 @@ export const TransactionsListQuerySchema = z
         limit: coerceOptionalInt(),
         cursor: z.string().trim().min(1).optional(),
         order: z.enum(['date.asc', 'date.desc']).default('date.desc'),
-        start_date: IsoDateSchema.optional(),
-        end_date: IsoDateSchema.optional(),
+        month: MonthSchema,
         type_id: coerceOptionalInt(),
         min_amount: coerceOptionalNumber(),
         max_amount: coerceOptionalNumber(),
@@ -85,8 +103,12 @@ export const TransactionsListQuerySchema = z
         fields: z.string().trim().min(1).optional(),
     })
     .transform((data) => {
+        const { start_date, end_date } = getMonthDateRange(data.month);
+
         return {
             ...data,
+            start_date,
+            end_date,
             limit: data.limit ?? 50,
         };
     })
@@ -114,15 +136,6 @@ export const TransactionsListQuerySchema = z
                 code: z.ZodIssueCode.custom,
                 path: ['pageSize'],
                 message: 'pageSize must be between 1 and 1000',
-            });
-        }
-
-        // date range consistency
-        if (data.start_date && data.end_date && data.start_date > data.end_date) {
-            ctx.addIssue({
-                code: z.ZodIssueCode.custom,
-                path: ['start_date'],
-                message: 'start_date must be <= end_date',
             });
         }
 

@@ -11,7 +11,7 @@
         "lint": "eslint .",
         "lint:fix": "eslint . --fix",
         "format": "prettier --write .",
-        "test:e2e": "vitest playwright test",
+        "test:e2e": "playwright test",
         "test:run": "vitest run",
         "test:coverage": "vitest run --coverage"
     },

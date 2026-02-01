@@ -109,8 +109,7 @@ export interface TransactionFilters {
     limit?: number;
     cursor?: string;
     order?: 'date.asc' | 'date.desc';
-    start_date?: string; // YYYY-MM-DD
-    end_date?: string; // YYYY-MM-DD
+    month?: string; // YYYY-MM
     type_id?: number;
     min_amount?: number;
     max_amount?: number;

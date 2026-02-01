@@ -19,13 +19,13 @@ export const prerender = false;
  */
 export const GET: APIRoute = async ({ request, locals }) => {
     try {
-        const user = await requireUser({ locals });
+        await requireUser({ locals });
 
         const url = new URL(request.url);
         const queryParams = Object.fromEntries(url.searchParams.entries());
         const filters = TransactionsListQuerySchema.parse(queryParams);
 
-        const result = await transactionsService.listTransactions(filters, locals.supabase, user.id);
+        const result = await transactionsService.listTransactions(filters, locals.supabase);
         return jsonResponse(result, 200);
     } catch (error) {
         if (error instanceof UnauthorizedError) {

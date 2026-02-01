@@ -5,10 +5,9 @@ import type {
     CreateTransactionCommand,
     PaginatedResponse,
     TransactionDTO,
-    TransactionFilters,
 } from '../../types';
 import { ConflictError, NotFoundError } from '../errors';
-import { TRANSACTION_SELECTABLE_FIELDS } from '../schemas/transactions.schema';
+import { TRANSACTION_SELECTABLE_FIELDS, type TransactionsListQuery } from '../schemas/transactions.schema';
 import crypto from 'node:crypto';
 
 const DEFAULT_LIMIT = 50;
@@ -57,7 +56,7 @@ function encodeCursor(row: Pick<TransactionDTO, 'date' | 'id'>): string {
 
 export class TransactionsService {
     async listTransactions(
-        filters: TransactionFilters,
+        filters: TransactionsListQuery,
         supabase: SupabaseClient
     ): Promise<PaginatedResponse<TransactionDTO>> {
         const limit = Math.min(filters.limit ?? DEFAULT_LIMIT, 1000);
@@ -67,9 +66,8 @@ export class TransactionsService {
 
         let query = supabase.from('transactions').select(select, { count: 'exact' });
 
-        // filters
-        if (filters.start_date) query = query.gte('date', filters.start_date);
-        if (filters.end_date) query = query.lte('date', filters.end_date);
+        // filters - month range is always present (derived from month parameter)
+        query = query.gte('date', filters.start_date).lte('date', filters.end_date);
         if (filters.type_id) query = query.eq('type_id', filters.type_id);
         if (filters.min_amount !== undefined) query = query.gte('amount', filters.min_amount);
         if (filters.max_amount !== undefined) query = query.lte('amount', filters.max_amount);
