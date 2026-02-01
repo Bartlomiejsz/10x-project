@@ -1,5 +1,5 @@
-import { test, expect } from '@playwright/test';
 import { MonthSelectorPage } from './page-objects/MonthSelector.page';
+import { expect, test } from '@playwright/test';
 
 test.describe('MonthSelector', () => {
     let monthSelector: MonthSelectorPage;
@@ -70,7 +70,7 @@ test.describe('MonthSelector', () => {
             await expect(monthSelector.nextButton).toBeEnabled();
         });
 
-        test('should disable prev button when on oldest available month', async ({ page }) => {
+        test('should disable prev button when on oldest available month', async () => {
             // Arrange: Navigate to oldest month by clicking prev multiple times
             // Using a loop with safety limit
             const maxClicks = 20;
@@ -220,7 +220,7 @@ test.describe('MonthSelector', () => {
         test('should persist selected month across navigation within session', async ({ page }) => {
             // Arrange
             await monthSelector.goToPreviousMonth();
-            const selectedValue = await monthSelector.getCurrentValue();
+            await monthSelector.getCurrentValue();
 
             // Act: Soft navigation (if applicable) or reload
             await page.reload();
