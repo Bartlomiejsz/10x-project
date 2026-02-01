@@ -82,7 +82,6 @@ jobs:
     name: Deploy to Cloudflare Pages
     runs-on: ubuntu-latest
     needs: build
-    if: github.event_name == 'workflow_dispatch'
     environment: production
     steps:
       - name: Download build artifacts
