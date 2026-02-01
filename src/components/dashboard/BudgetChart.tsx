@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 
+import { useClickOutside } from '../hooks/useClickOutside';
 import { InlineBudgetEditor } from './InlineBudgetEditor';
 
 import { formatCurrency, formatPercent, getStatusColors } from '@/lib/format';
@@ -39,47 +40,20 @@ export const BudgetChart = ({
         setEditingTypeId((prev) => (prev === typeId ? null : typeId));
     }, []);
 
-    useEffect(() => {
-        if (!editingTypeId) return;
+    const closeEditor = useCallback(() => setEditingTypeId(null), []);
 
-        const handleKeyDown = (e: KeyboardEvent) => {
-            if (e.key !== 'Escape') return;
-            setEditingTypeId(null);
-        };
+    const clickOutsideOptions = useMemo(
+        () => ({
+            closeOnEscape: true,
+            closeOnInsideClickOutsideAllowed: true,
+            allowedSelectors: editingTypeId
+                ? [`#budget-editor-${editingTypeId}`, `[aria-controls="budget-editor-${editingTypeId}"]`]
+                : [],
+        }),
+        [editingTypeId]
+    );
 
-        const handlePointerDown = (e: MouseEvent | TouchEvent) => {
-            const container = containerRef.current;
-            if (!container) return;
-
-            const target = e.target;
-            if (!(target instanceof Node)) return;
-
-            // jeśli klik poza chartem, zamknij
-            if (!container.contains(target)) {
-                setEditingTypeId(null);
-                return;
-            }
-
-            // jeśli klik wewnątrz chartu, ale poza aktywnym edytorem i poza kontrolką otwierającą, zamknij
-            const editor = container.querySelector(`#budget-editor-${editingTypeId}`);
-            const toggle = container.querySelector(`[aria-controls="budget-editor-${editingTypeId}"]`);
-
-            if (editor && editor.contains(target)) return;
-            if (toggle && toggle.contains(target)) return;
-
-            setEditingTypeId(null);
-        };
-
-        document.addEventListener('keydown', handleKeyDown);
-        document.addEventListener('mousedown', handlePointerDown);
-        document.addEventListener('touchstart', handlePointerDown, { passive: true });
-
-        return () => {
-            document.removeEventListener('keydown', handleKeyDown);
-            document.removeEventListener('mousedown', handlePointerDown);
-            document.removeEventListener('touchstart', handlePointerDown);
-        };
-    }, [editingTypeId]);
+    useClickOutside(containerRef, closeEditor, Boolean(editingTypeId), clickOutsideOptions);
 
     if (items.length === 0) {
         return (
