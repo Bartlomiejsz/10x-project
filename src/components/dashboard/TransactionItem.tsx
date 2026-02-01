@@ -1,6 +1,5 @@
 import { useCallback, useMemo } from 'react';
 
-import { ConfidenceBadge } from './ConfidenceBadge';
 import { Lock, Pencil, Trash2 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
