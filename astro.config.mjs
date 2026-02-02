@@ -8,6 +8,7 @@ import { defineConfig, envField } from 'astro/config';
 // https://astro.build/config
 export default defineConfig({
     output: 'server',
+    site: 'https://home-budget-1va.pages.dev',
     integrations: [react(), sitemap()],
     server: { port: 3000 },
     env: {

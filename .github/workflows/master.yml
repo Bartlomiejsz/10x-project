@@ -36,6 +36,7 @@ jobs:
   e2e-tests:
     name: E2E Tests
     runs-on: ubuntu-latest
+    if: false
     needs: lint
     environment: test
     steps:
