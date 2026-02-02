@@ -1,19 +1,22 @@
-import type { SupabaseClient } from '../../db/supabase.client';
+import { ConflictError, NotFoundError } from '../errors';
+import { TRANSACTION_SELECTABLE_FIELDS, type TransactionsListQuery } from '../schemas/transactions.schema';
+
+import type { SupabaseClient } from '@/db/supabase.client';
 import type {
     BatchImportItemResult,
     BatchImportResult,
     CreateTransactionCommand,
     PaginatedResponse,
     TransactionDTO,
-} from '../../types';
-import { ConflictError, NotFoundError } from '../errors';
-import { TRANSACTION_SELECTABLE_FIELDS, type TransactionsListQuery } from '../schemas/transactions.schema';
-import crypto from 'node:crypto';
+} from '@/types';
 
 const DEFAULT_LIMIT = 50;
 
-function computeImportHash(input: { date: string; amount: number; description: string }): string {
-    return crypto.createHash('md5').update(`${input.date}|${input.amount}|${input.description}`, 'utf8').digest('hex');
+async function computeImportHash(input: { date: string; amount: number; description: string }): Promise<string> {
+    const data = new TextEncoder().encode(`${input.date}|${input.amount}|${input.description}`);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map((b) => b.toString(16).padStart(2, '0')).join('');
 }
 
 function parseFields(fields?: string): string | undefined {
@@ -37,9 +40,21 @@ function parseFields(fields?: string): string | undefined {
     return parts.join(',');
 }
 
+function base64UrlDecode(str: string): string {
+    // Convert base64url to standard base64
+    const base64 = str.replace(/-/g, '+').replace(/_/g, '/');
+    const padded = base64 + '='.repeat((4 - (base64.length % 4)) % 4);
+    return atob(padded);
+}
+
+function base64UrlEncode(str: string): string {
+    // Convert standard base64 to base64url
+    return btoa(str).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
+
 function decodeCursor(cursor: string): { date: string; id: string } {
-    // Cursor is opaque base64(json)
-    const raw = Buffer.from(cursor, 'base64url').toString('utf8');
+    // Cursor is opaque base64url(json)
+    const raw = base64UrlDecode(cursor);
     const parsed = JSON.parse(raw) as { date?: unknown; id?: unknown };
 
     if (typeof parsed.date !== 'string' || typeof parsed.id !== 'string') {
@@ -51,7 +66,7 @@ function decodeCursor(cursor: string): { date: string; id: string } {
 
 function encodeCursor(row: Pick<TransactionDTO, 'date' | 'id'>): string {
     const json = JSON.stringify({ date: row.date, id: row.id });
-    return Buffer.from(json, 'utf8').toString('base64url');
+    return base64UrlEncode(json);
 }
 
 export class TransactionsService {
@@ -166,11 +181,11 @@ export class TransactionsService {
     ): Promise<TransactionDTO> {
         const importHash =
             cmd.import_hash ??
-            computeImportHash({
+            (await computeImportHash({
                 date: cmd.date,
                 amount: cmd.amount,
                 description: cmd.description,
-            });
+            }));
 
         // Dedup only if we have an import hash to compare
         if (importHash) {
@@ -231,11 +246,11 @@ export class TransactionsService {
                 if (e instanceof ConflictError) {
                     const import_hash =
                         item.import_hash ??
-                        computeImportHash({
+                        (await computeImportHash({
                             date: item.date,
                             amount: item.amount,
                             description: item.description,
-                        });
+                        }));
                     results.push({ status: 'skipped', reason: 'duplicate', import_hash });
                     continue;
                 }

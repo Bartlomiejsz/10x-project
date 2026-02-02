@@ -38,7 +38,7 @@ export const GET: APIRoute = async ({ request, locals }) => {
 
         // eslint-disable-next-line no-console
         console.error('[GET /api/transactions] Unexpected error:', error);
-        return jsonError(500, 'INTERNAL_ERROR', 'An unexpected error occurred - ' + String(error));
+        return jsonError(500, 'INTERNAL_ERROR', 'An unexpected error occurred');
     }
 };
 
