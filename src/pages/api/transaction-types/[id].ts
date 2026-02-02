@@ -1,12 +1,13 @@
-import { requireUser } from '../../../lib/api/auth';
-import { jsonError, jsonResponse } from '../../../lib/api/http';
-import { parseParam } from '../../../lib/api/params';
-import { NotFoundError, UnauthorizedError } from '../../../lib/errors';
-import { TransactionTypeIdSchema } from '../../../lib/schemas/transaction-types.schema';
-import { transactionTypesService } from '../../../lib/services/transaction-types.service';
-import type { TransactionTypeDTO } from '../../../types';
 import type { APIRoute } from 'astro';
 import { z } from 'zod';
+
+import { requireUser } from '@/lib/api/auth';
+import { jsonError, jsonResponse } from '@/lib/api/http';
+import { parseParam } from '@/lib/api/params';
+import { NotFoundError, UnauthorizedError } from '@/lib/errors';
+import { TransactionTypeIdSchema } from '@/lib/schemas/transaction-types.schema';
+import { transactionTypesService } from '@/lib/services/transaction-types.service';
+import type { TransactionTypeDTO } from '@/types';
 
 export const prerender = false;
 

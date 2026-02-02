@@ -1,16 +1,17 @@
-import { requireUser } from '../../../lib/api/auth';
-import { jsonError, jsonResponse } from '../../../lib/api/http';
-import { parseParam } from '../../../lib/api/params';
-import { shouldRejectAiUpdate } from '../../../lib/api/transactions.rules';
-import { UnauthorizedError } from '../../../lib/errors';
+import type { APIRoute } from 'astro';
+import { z } from 'zod';
+
+import { requireUser } from '@/lib/api/auth';
+import { jsonError, jsonResponse } from '@/lib/api/http';
+import { parseParam } from '@/lib/api/params';
+import { shouldRejectAiUpdate } from '@/lib/api/transactions.rules';
+import { UnauthorizedError } from '@/lib/errors';
 import {
     PatchTransactionSchema,
     TransactionIdSchema,
     UpdateTransactionPutSchema,
-} from '../../../lib/schemas/transactions.schema';
-import type { TransactionDTO } from '../../../types';
-import type { APIRoute } from 'astro';
-import { z } from 'zod';
+} from '@/lib/schemas/transactions.schema';
+import type { TransactionDTO } from '@/types';
 
 export const prerender = false;
 

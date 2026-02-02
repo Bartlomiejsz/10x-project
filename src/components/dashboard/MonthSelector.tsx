@@ -63,8 +63,10 @@ export const MonthSelector = ({ value, options, onChange, className }: MonthSele
                     {options.map((opt) => (
                         <SelectItem key={opt.value} value={opt.value} data-testid={`month-option-${opt.value}`}>
                             <div className="flex items-center gap-2">
+                                {opt.isReadonly && (
+                                    <Lock className="h-4 w-4 flex-shrink-0 text-amber-600" aria-hidden="true" />
+                                )}
                                 <span>{opt.label}</span>
-                                {opt.isReadonly && <span className="text-xs text-slate-500">(tylko podgląd)</span>}
                             </div>
                         </SelectItem>
                     ))}
