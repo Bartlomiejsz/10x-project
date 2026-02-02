@@ -1,6 +1,6 @@
 ---
 import { GoogleOAuthButtons } from '@/components/auth/GoogleOAuthButtons';
-import AuthLayout from '../../layouts/AuthLayout.astro';
+import Layout from '@/layouts/Layout.astro';
 
 const { url } = Astro;
 
@@ -15,7 +15,7 @@ const authError = authErrorParam
     : null;
 ---
 
-<AuthLayout title="Zaloguj się do Home Budget" description="Dostęp do panelu zarządzania finansami">
+<Layout title="Zaloguj się do Home Budget" description="Dostęp do panelu zarządzania finansami">
     <section class="grid gap-12 lg:grid-cols-2" aria-labelledby="login-title">
         <div class="space-y-6">
             <p class="text-sm font-semibold uppercase tracking-[0.2em] text-muted-foreground">Panel finansów</p>
@@ -59,4 +59,4 @@ const authError = authErrorParam
             </div>
         </article>
     </section>
-</AuthLayout>
+</Layout>
