@@ -9,6 +9,7 @@ Backend - Supabase jako kompleksowe rozwiązanie backendowe:
 - Baza danych PostgreSQL do przechowywania danych aplikacji
 - Jest open-source i można go hostować samodzielnie w razie potrzeby
 - Posiada wbudowaną autentykację użytkowników, w tym logowanie przez social media (OAuth)
+- Jedyną metodą autentykacji będzie logowanie przez Google OAuth
 
 AI - Komunikacja z modelami przez usługę Openrouter.ai:
 - Dostęp do szerokiej gamy modeli (OpenAI, Anthropic, Google i wiele innych), które pozwolą nam znaleźć rozwiązanie zapewniające wysoką efektywność i niskie koszta
