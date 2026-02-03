@@ -166,7 +166,6 @@ const DashboardPage = () => {
             <TransactionDialog
                 open={dialog.isOpen}
                 mode={dialog.mode}
-                month={month.value}
                 types={data.types}
                 transactionId={dialog.transactionId}
                 isReadonly={readonly.isReadonly}

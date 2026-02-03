@@ -71,8 +71,10 @@ export const DashboardStateProvider = ({ initialMonth, children }: { initialMont
 
 export const useDashboardState = () => {
     const ctx = useContext(DashboardStateContext);
+
     if (!ctx) {
         throw new Error('useDashboardState must be used within DashboardStateProvider');
     }
+
     return ctx;
 };
