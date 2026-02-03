@@ -1,6 +1,5 @@
 import { ConflictError, NotFoundError } from '../errors';
 import { TRANSACTION_SELECTABLE_FIELDS, type TransactionsListQuery } from '../schemas/transactions.schema';
-
 import type { SupabaseClient } from '@supabase/supabase-js';
 
 import type { Database } from '@/db/database.types';

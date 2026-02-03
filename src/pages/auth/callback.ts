@@ -10,14 +10,14 @@ function parseAllowedEmails(envValue: string): string[] {
         .filter(Boolean);
 }
 
-export const GET: APIRoute = async ({ cookies, redirect, request, url }) => {
+export const GET: APIRoute = async ({ redirect, request, url }) => {
     const authCode = url.searchParams.get('code');
 
     if (!authCode) {
         return redirect('/auth/login?authError=no-code');
     }
 
-    const supabase = createSupabaseServerClient(request, cookies);
+    const { client: supabase, applyPendingCookies } = createSupabaseServerClient(request);
 
     const { data, error } = await supabase.auth.exchangeCodeForSession(authCode);
 
@@ -34,5 +34,6 @@ export const GET: APIRoute = async ({ cookies, redirect, request, url }) => {
         return redirect('/auth/login?authError=unauthorized-email');
     }
 
-    return redirect('/');
+    // Apply session cookies to the redirect response
+    return applyPendingCookies(redirect('/'));
 };

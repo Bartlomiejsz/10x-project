@@ -16,8 +16,8 @@ const buildErrorRedirect = (requestUrl: URL, reason: string) => {
     return loginUrl.toString();
 };
 
-export const onRequest = defineMiddleware(async ({ cookies, locals, request, url }, next) => {
-    const supabase = createSupabaseServerClient(request, cookies);
+export const onRequest = defineMiddleware(async ({ locals, request, url }, next) => {
+    const { client: supabase, applyPendingCookies } = createSupabaseServerClient(request);
     locals.supabase = supabase;
 
     if (request.method === 'GET' && url.pathname === GOOGLE_OAUTH_PATH) {
@@ -35,16 +35,20 @@ export const onRequest = defineMiddleware(async ({ cookies, locals, request, url
                 throw error ?? new Error('missing-oauth-url');
             }
 
-            return Response.redirect(data.url, 302);
+            // Apply PKCE verifier cookie to the redirect response
+            return applyPendingCookies(Response.redirect(data.url, 302));
         } catch {
             const fallback = buildErrorRedirect(url, 'generic');
             return Response.redirect(fallback, 302);
         }
     }
 
-    // Refresh session - @supabase/ssr automatically handles token refresh
-    // and updates cookies via setAll() callback when needed
+    // Refresh session - @supabase/ssr handles token refresh via setAll() callback
     await supabase.auth.getSession();
 
-    return next();
+    const response = await next();
+
+    // Apply any pending cookies (e.g., refreshed tokens) to the response
+    // This is required for Cloudflare Pages where headers are immutable
+    return applyPendingCookies(response);
 });
