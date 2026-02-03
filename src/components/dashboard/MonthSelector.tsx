@@ -49,13 +49,6 @@ export const MonthSelector = ({ value, options, onChange, className }: MonthSele
             <Select value={value} onValueChange={onChange}>
                 <SelectTrigger className="min-w-[200px] flex-1" data-testid="month-selector-trigger">
                     <div className="flex items-center gap-2">
-                        {currentOption?.isReadonly && (
-                            <Lock
-                                className="h-4 w-4 flex-shrink-0 text-amber-600"
-                                aria-hidden="true"
-                                data-testid="month-selector-lock-icon"
-                            />
-                        )}
                         <SelectValue aria-current={currentOption?.value === value ? 'date' : undefined} />
                     </div>
                 </SelectTrigger>

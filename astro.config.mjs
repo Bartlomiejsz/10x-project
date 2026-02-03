@@ -16,6 +16,11 @@ export default defineConfig({
             SUPABASE_URL: envField.string({ context: 'server', access: 'secret' }),
             SUPABASE_KEY: envField.string({ context: 'server', access: 'secret' }),
             SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_SECRET: envField.string({ context: 'server', access: 'secret' }),
+            ALLOWED_EMAILS: envField.string({
+                context: 'server',
+                access: 'secret',
+                default: '',
+            }),
         },
     },
     vite: {

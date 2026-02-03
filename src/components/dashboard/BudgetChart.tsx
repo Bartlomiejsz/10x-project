@@ -4,6 +4,7 @@ import { useClickOutside } from '../hooks/useClickOutside';
 import { InlineBudgetEditor } from './InlineBudgetEditor';
 
 import { formatCurrency, formatPercent, getStatusColors } from '@/lib/format';
+import { mapUserIdToUserName } from '@/lib/mappers/userName.ts';
 import { cn } from '@/lib/utils';
 import type { ChartItemVM } from '@/types/dashboard';
 
@@ -193,7 +194,7 @@ export const BudgetChart = ({
                                                         key={s.userId}
                                                         className="whitespace-nowrap text-xs text-slate-600"
                                                     >
-                                                        {s.userId}: {formatCurrency(s.amount)}
+                                                        {mapUserIdToUserName(s.userId)}: {formatCurrency(s.amount)}
                                                     </p>
                                                 ))}
                                             </div>

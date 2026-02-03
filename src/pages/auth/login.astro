@@ -9,6 +9,9 @@ const authErrorDictionary: Record<string, string> = {
     expired: 'Sesja wygasła. Zaloguj się ponownie.',
     missing: 'Brak aktywnej sesji. Prosimy o ponowne logowanie.',
     denied: 'Dostęp został odrzucony. Sprawdź uprawnienia konta.',
+    'no-code': 'Brak kodu autoryzacji. Spróbuj ponownie.',
+    'exchange-failed': 'Błąd autoryzacji Google. Spróbuj ponownie.',
+    'unauthorized-email': 'Ten adres email nie ma dostępu do aplikacji.',
 };
 const authError = authErrorParam
     ? (authErrorDictionary[authErrorParam] ?? 'Nie udało się zalogować. Spróbuj ponownie.')
@@ -16,7 +19,7 @@ const authError = authErrorParam
 ---
 
 <Layout title="Zaloguj się do Home Budget" description="Dostęp do panelu zarządzania finansami">
-    <section class="grid gap-12 lg:grid-cols-2" aria-labelledby="login-title">
+    <section class="grid gap-12 lg:grid-cols-2 py-8 pb-4" aria-labelledby="login-title">
         <div class="space-y-6">
             <p class="text-sm font-semibold uppercase tracking-[0.2em] text-muted-foreground">Panel finansów</p>
             <div class="space-y-4">

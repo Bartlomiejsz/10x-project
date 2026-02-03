@@ -1,33 +1,38 @@
 import { type APIRoute } from 'astro';
+import { ALLOWED_EMAILS } from 'astro:env/server';
 
-import { supabaseClient } from '@/db/supabase.client';
+import { createSupabaseServerClient } from '@/db/supabase.server';
 
-export const COOKIE_OPTIONS = {
-    path: '/',
-    secure: true,
-    httpOnly: true,
-    sameSite: 'lax' as const,
-    maxAge: 60 * 60 * 24 * 365,
-};
+function parseAllowedEmails(envValue: string): string[] {
+    return envValue
+        .split(',')
+        .map((email) => email.trim().toLowerCase())
+        .filter(Boolean);
+}
 
-export const GET: APIRoute = async (props) => {
-    const { cookies, redirect, url } = props;
+export const GET: APIRoute = async ({ cookies, redirect, request, url }) => {
     const authCode = url.searchParams.get('code');
 
     if (!authCode) {
-        return new Response('No code provided', { status: 400 });
+        return redirect('/auth/login?authError=no-code');
     }
 
-    const { data, error } = await supabaseClient.auth.exchangeCodeForSession(authCode);
+    const supabase = createSupabaseServerClient(request, cookies);
+
+    const { data, error } = await supabase.auth.exchangeCodeForSession(authCode);
 
     if (error) {
-        return new Response(error.message, { status: 500 });
+        return redirect('/auth/login?authError=exchange-failed');
     }
 
-    const { access_token, refresh_token } = data.session;
+    const userEmail = data.session?.user?.email?.toLowerCase();
+    const allowedEmails = parseAllowedEmails(ALLOWED_EMAILS);
 
-    cookies.set('sb-access-token', access_token, COOKIE_OPTIONS);
-    cookies.set('sb-refresh-token', refresh_token, COOKIE_OPTIONS);
+    if (!userEmail || !allowedEmails.includes(userEmail)) {
+        await supabase.auth.signOut();
+
+        return redirect('/auth/login?authError=unauthorized-email');
+    }
 
     return redirect('/');
 };

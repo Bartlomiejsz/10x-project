@@ -35,7 +35,7 @@ const currentYear = new Date().getFullYear();
     <body class="min-h-screen bg-background text-foreground">
         <div class="flex min-h-screen flex-col">
             <header class="border-b border-border bg-card/60" role="banner">
-                <div class="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-6">
+                <div class="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-2">
                     <a
                         href="/"
                         class="text-lg font-semibold tracking-tight text-primary transition-colors hover:text-primary/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2"
@@ -48,7 +48,7 @@ const currentYear = new Date().getFullYear();
 
             <main
                 role="main"
-                class="mx-auto flex w-full max-w-6xl flex-1 flex-col justify-center px-6 py-12"
+                class="mx-auto flex w-full max-w-6xl flex-1 flex-col justify-center px-4 pb-4"
                 aria-live="polite"
             >
                 <slot />
@@ -59,10 +59,6 @@ const currentYear = new Date().getFullYear();
                     class="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-4 px-6 py-6 text-sm text-muted-foreground"
                 >
                     <p>&copy; {currentYear} Home Budget. Wszelkie prawa zastrzeżone.</p>
-                    <nav aria-label="Linki pomocnicze" class="flex gap-6">
-                        <a href="#" class="transition-colors hover:text-foreground">Polityka prywatności</a>
-                        <a href="#" class="transition-colors hover:text-foreground">Warunki korzystania</a>
-                    </nav>
                 </div>
             </footer>
         </div>

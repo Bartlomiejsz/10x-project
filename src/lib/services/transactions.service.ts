@@ -1,7 +1,9 @@
 import { ConflictError, NotFoundError } from '../errors';
 import { TRANSACTION_SELECTABLE_FIELDS, type TransactionsListQuery } from '../schemas/transactions.schema';
 
-import type { SupabaseClient } from '@/db/supabase.client';
+import type { SupabaseClient } from '@supabase/supabase-js';
+
+import type { Database } from '@/db/database.types';
 import type {
     BatchImportItemResult,
     BatchImportResult,
@@ -72,7 +74,7 @@ function encodeCursor(row: Pick<TransactionDTO, 'date' | 'id'>): string {
 export class TransactionsService {
     async listTransactions(
         filters: TransactionsListQuery,
-        supabase: SupabaseClient
+        supabase: SupabaseClient<Database>
     ): Promise<PaginatedResponse<TransactionDTO>> {
         const limit = Math.min(filters.limit ?? DEFAULT_LIMIT, 1000);
 
@@ -154,7 +156,7 @@ export class TransactionsService {
         };
     }
 
-    async getTransactionById(id: string, supabase: SupabaseClient): Promise<TransactionDTO> {
+    async getTransactionById(id: string, supabase: SupabaseClient<Database>): Promise<TransactionDTO> {
         const { data, error } = await supabase.from('transactions').select('*').eq('id', id).single();
 
         if (error && error.code === 'PGRST116') {
@@ -176,7 +178,7 @@ export class TransactionsService {
 
     async createTransaction(
         cmd: CreateTransactionCommand,
-        supabase: SupabaseClient,
+        supabase: SupabaseClient<Database>,
         userId: string
     ): Promise<TransactionDTO> {
         const importHash =
@@ -231,7 +233,7 @@ export class TransactionsService {
 
     async createTransactionsBatch(
         cmd: { transactions: CreateTransactionCommand[] },
-        supabase: SupabaseClient,
+        supabase: SupabaseClient<Database>,
         userId: string
     ): Promise<BatchImportResult> {
         // Placeholder implementation until RPC lands.
